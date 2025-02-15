@@ -5,10 +5,10 @@ import os
 import re
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
-
+import folium
+from streamlit_folium import folium_static
 
 def get_exif_data(image):
-    """EXIFデータを取得して、GPS情報と撮影日時を抽出"""
     exif_data = {}
     info = image._getexif()
     if info is not None:
@@ -16,7 +16,6 @@ def get_exif_data(image):
             tag_name = TAGS.get(tag, tag)
             exif_data[tag_name] = value
     return exif_data
-
 
 def get_gps_info(exif_data):
     if "GPSInfo" in exif_data:
@@ -39,8 +38,7 @@ def get_gps_info(exif_data):
             return lat, lon
     return None, None
 
-
-st.title("写真アップローダー & EXIFデータ取得")
+st.title("📸 写真アップローダー & EXIFデータ取得")
 
 uploaded_images = st.file_uploader("画像ファイルをアップロードしてください", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
 uploaded_zip = st.file_uploader("ZIPファイルをアップロードしてください", type=["zip"], accept_multiple_files=False)
@@ -85,8 +83,20 @@ if data_list:
 if "data_list" in st.session_state and st.session_state.data_list:
     st.subheader("アップロードされたデータ一覧")
     df = pd.DataFrame(st.session_state.data_list)
-    
-
     st.dataframe(df)
+
+    st.subheader("位置情報を地図で表示")
+    
+    # 地図の初期設定
+    map_location = folium.Map(location=[35.0, 135.0], zoom_start=5)  
+
+    for data in st.session_state.data_list:
+        lat = data["緯度"]
+        lon = data["経度"]
+        if lat is not None and lon is not None:
+            folium.Marker([lat, lon], popup=data["ファイル名"]).add_to(map_location)
+
+    folium_static(map_location)
+
 else:
     st.info("まだデータがありません。写真をアップロードしてください。")
