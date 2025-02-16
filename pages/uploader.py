@@ -8,6 +8,7 @@ from PIL.ExifTags import TAGS, GPSTAGS
 import folium
 from streamlit_folium import folium_static
 
+
 def get_exif_data(image):
     exif_data = {}
     info = image._getexif()
@@ -37,6 +38,17 @@ def get_gps_info(exif_data):
 
             return lat, lon
     return None, None
+
+# セッション状態の確認
+if "logged_in" not in st.session_state or not st.session_state.logged_in:
+    st.warning("ログインしていません。ログインページに戻ってください。")
+    st.stop()  # 他の処理を止める
+
+
+
+
+# ログイン後のページ内容
+st.write(f"ようこそ、{st.session_state.username}さん！")
 
 st.title("📸 写真アップローダー & EXIFデータ取得")
 

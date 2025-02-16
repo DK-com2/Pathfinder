@@ -1,5 +1,8 @@
 streamlit
 streamlit-current-location
+streamlit-authenticator
+supabase
+st_login_form
 folium
 streamlit-folium
 pandas

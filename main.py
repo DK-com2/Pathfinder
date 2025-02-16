@@ -1,28 +1,65 @@
 import streamlit as st
-from streamlit_current_location import current_position
-import folium
-from streamlit_folium import folium_static
+from supabase import create_client, Client
+
+# secrets.tomlからSupabaseのURLとキーを取得（.streamlit/secrets.tomlに設定しておく）
+SUPABASE_URL = st.secrets["supabase"]["url"]
+SUPABASE_KEY = st.secrets["supabase"]["key"]
+
+# Supabaseクライアントを作成
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# セッションの状態がまだ設定されていない場合、"login" ページに遷移
+if "page" not in st.session_state:
+    st.session_state.page = "login"
+
+# ログインチェックをする関数
+def check_login():
+    if "logged_in" not in st.session_state or not st.session_state.logged_in:
+        st.session_state.page = "login"
+        st.rerun()
+
+# ログイン画面
+if st.session_state.page == "login":
+    st.title("ログイン画面")
+
+    # ユーザー名とパスワードを入力するフォームを表示
+    username = st.text_input("ユーザー名")
+    password = st.text_input("パスワード", type="password")
+
+    if st.button("ログイン"):
+        # ユーザー名とパスワードを使ってDBからデータを取得
+        response = supabase.table("users").select("*").eq("username", username).execute()
+
+        if response.data:
+            user_data = response.data[0]
+
+            # パスワードを確認（平文で比較）
+            if user_data["password"] == password:
+                st.session_state.logged_in = True
+                st.session_state.username = username
+                st.success("ログイン成功！")
+
+                st.session_state.page = "home"  
+                st.rerun()  
+            else:
+                st.error("パスワードが間違っています。")
+        else:
+            st.error("ユーザー名が見つかりません。")
 
 
-st.title("📍 位置情報取得と地図表示")
+
+# ホーム画面（ログイン後）
+if st.session_state.page == "home":
+    check_login()  # ログインチェック
+
+    st.title(f"ようこそ、{st.session_state.username}さん！")
+
+    # ログアウトボタン
+    if st.button("ログアウト"):
+        del st.session_state.logged_in
+        del st.session_state.username
+        st.session_state.page = "login"  # ログアウト後はログインページに戻る
+        st.rerun() 
 
 
-position = current_position()
 
-
-if st.button("現在地を表示"):
-
-    if position is not None:
-        lat = position["latitude"]
-        lon = position["longitude"]
-
-        st.write(f"### 緯度: {lat}")
-        st.write(f"### 経度: {lon}")
-
-        map_location = folium.Map(location=[lat, lon], zoom_start=15)
-        folium.Marker([lat, lon], popup="現在地", tooltip="ここです").add_to(map_location)
-
-        folium_static(map_location)
-
-    else:
-        st.warning("位置情報の取得に失敗しました。再度試してみてください。")
