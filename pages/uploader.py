@@ -9,6 +9,7 @@ import folium
 from streamlit_folium import folium_static
 
 
+
 def get_exif_data(image):
     exif_data = {}
     info = image._getexif()
@@ -38,6 +39,13 @@ def get_gps_info(exif_data):
 
             return lat, lon
     return None, None
+
+st.set_page_config(
+    page_title="pathfinder",  # タイトル
+    page_icon="🚀",  # ファビコン
+    layout="centered",  # レイアウト（"centered" または "wide"）
+    initial_sidebar_state="expanded"  # サイドバーの初期状態（"auto", "expanded", "collapsed"）
+)
 
 # セッション状態の確認
 if "logged_in" not in st.session_state or not st.session_state.logged_in:

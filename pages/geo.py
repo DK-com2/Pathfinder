@@ -3,6 +3,12 @@ from streamlit_current_location import current_position
 import folium
 from streamlit_folium import folium_static
 
+st.set_page_config(
+    page_title="pathfinder",  # タイトル
+    page_icon="🚀",  # ファビコン
+    layout="centered",  # レイアウト（"centered" または "wide"）
+    initial_sidebar_state="expanded"  # サイドバーの初期状態（"auto", "expanded", "collapsed"）
+)
 
 
 # セッション状態の確認

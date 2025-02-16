@@ -2,6 +2,15 @@ import bcrypt
 import streamlit as st
 from supabase import create_client, Client
 
+st.set_page_config(
+    page_title="pathfinder",  # タイトル
+    page_icon="🚀",  # アイコン
+    layout="centered",  # レイアウト（"centered" または "wide"）
+    initial_sidebar_state="expanded"  # サイドバーの初期状態（"auto", "expanded", "collapsed"）
+)
+
+
+
 SUPABASE_URL = st.secrets["supabase"]["url"]
 SUPABASE_KEY = st.secrets["supabase"]["key"]
 
