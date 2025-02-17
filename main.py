@@ -1,6 +1,8 @@
 import bcrypt
 import streamlit as st
 from supabase import create_client, Client
+import folium
+import pandas as pd
 
 
 # Supabase のセットアップ
@@ -57,6 +59,27 @@ if st.session_state.page == "home":
     check_login()  
 
     st.title(f"ようこそ、{st.session_state.username}さん！")
+    
+    response = supabase.table("locations").select("*").execute()
+    
+    if response.data:
+        df = pd.DataFrame(response.data)
+        st.write(df)
+        
+    map = folium.Map(location=[36.0047, 137.5936], zoom_start=5)
+    
+    # 各地点にピンを追加
+    for _, row in df.iterrows():
+        folium.Marker(
+            location=[row["latitude"], row["longitude"]],
+            popup=f"Username: {row['username']}\nComment: {row['comment']}\nTimestamp: {row['timestamp']}"
+        ).add_to(map)
+
+    # Streamlitで地図を表示
+    st.write("### Locations Map")
+    st.components.v1.html(map._repr_html_(), width=700, height=500)
+
+
 
     if st.button("ログアウト"):
         del st.session_state.logged_in
