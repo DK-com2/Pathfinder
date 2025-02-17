@@ -42,7 +42,7 @@ def get_gps_info(exif_data):
 
 st.set_page_config(
     page_title="pathfinder",  # タイトル
-    page_icon="🚀",  # ファビコン
+    page_icon="🌐",  # ファビコン
     layout="centered",  # レイアウト（"centered" または "wide"）
     initial_sidebar_state="expanded"  # サイドバーの初期状態（"auto", "expanded", "collapsed"）
 )
