@@ -75,10 +75,8 @@ if st.session_state.page == "home":
             popup=f"Username: {row['username']}\nComment: {row['comment']}\nTimestamp: {row['timestamp']}"
         ).add_to(map)
 
-    # Streamlitで地図を表示
     st.write("### Locations Map")
     st.components.v1.html(map._repr_html_(), width=700, height=500)
-
 
 
     if st.button("ログアウト"):

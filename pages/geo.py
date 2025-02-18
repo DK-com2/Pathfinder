@@ -18,6 +18,25 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# DBへ保存する関数
+def save_to_db(df):
+    for _, row in df.iterrows():
+        data = {
+            "username": row["username"],
+            "latitude": row["latitude"],
+            "longitude": row["longitude"],
+            "timestamp": row["timestamp"],
+            "comment": row["comment"]
+        }
+        # すでに同じデータがDBにあるか確認
+        existing = supabase.table("locations").select("*").eq("username", row["username"]).eq("timestamp", row["timestamp"]).execute()
+
+        if existing.data:  # すでに存在する場合は更新
+            supabase.table("locations").update({"comment": row["comment"]}).eq("username", row["username"]).eq("timestamp", row["timestamp"]).execute()
+        else:  # 存在しない場合は新規追加
+            supabase.table("locations").insert(data).execute()
+
+
 # セッション状態の確認
 if "logged_in" not in st.session_state or not st.session_state.logged_in:
     st.warning("ログインしていません。ログインページに戻ってください。")
@@ -63,25 +82,6 @@ if not st.session_state.location_data.empty:
         num_rows="fixed"
     )
     st.session_state.location_data["comment"] = edited_df["comment"]  # コメントのみ更新
-
-    # DBへ保存する関数
-    def save_to_db(df):
-        for _, row in df.iterrows():
-            data = {
-                "username": row["username"],
-                "latitude": row["latitude"],
-                "longitude": row["longitude"],
-                "timestamp": row["timestamp"],
-                "comment": row["comment"]
-            }
-            # すでに同じデータがDBにあるか確認
-            existing = supabase.table("locations").select("*").eq("username", row["username"]).eq("timestamp", row["timestamp"]).execute()
-
-            if existing.data:  # すでに存在する場合は更新
-                supabase.table("locations").update({"comment": row["comment"]}).eq("username", row["username"]).eq("timestamp", row["timestamp"]).execute()
-            else:  # 存在しない場合は新規追加
-                supabase.table("locations").insert(data).execute()
-
 
     # DBへ保存ボタン
     if st.button("DBへpush"):
