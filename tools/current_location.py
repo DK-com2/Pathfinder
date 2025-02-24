@@ -55,7 +55,7 @@ def get_and_save_current_position():
             if not new_entry.dropna(how="all").empty:
                 st.session_state.location_data = pd.concat([st.session_state.location_data, new_entry], ignore_index=True)
 
-            st.success("位置情報が保存されました！")
+            st.success("位置情報を取得しました！")
             
 
 def display_and_edit_location_data():
