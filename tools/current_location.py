@@ -51,7 +51,10 @@ def get_and_save_current_position():
                 "comment": [""]
             })
 
-            st.session_state.location_data = pd.concat([st.session_state.location_data, new_entry], ignore_index=True)
+            # FutureWarning の修正
+            if not new_entry.dropna(how="all").empty:
+                st.session_state.location_data = pd.concat([st.session_state.location_data, new_entry], ignore_index=True)
+
             st.success("位置情報が保存されました！")
             
 
