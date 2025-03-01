@@ -11,8 +11,6 @@ SUPABASE_URL = st.secrets["supabase"]["url"]
 SUPABASE_KEY = st.secrets["supabase"]["key"]
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-if "location_data" not in st.session_state:
-    st.session_state.location_data = pd.DataFrame(columns=["username", "latitude", "longitude", "timestamp", "comment"])
 
 
 # DBへ保存する関数
@@ -36,6 +34,9 @@ def save_to_db(df):
 
 def get_and_save_current_position():
     position = current_position()
+    
+    if "location_data" not in st.session_state:
+        st.session_state.location_data = pd.DataFrame(columns=["username", "latitude", "longitude", "timestamp", "comment"])
 
     if st.button("現在地を取得"):
         if position is not None:
