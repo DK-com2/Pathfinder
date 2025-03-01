@@ -21,6 +21,7 @@ def sign_in(email, password):
 # ログアウト
 def sign_out():
     supabase.auth.sign_out()
+    st.session_state.clear()
     st.session_state.logged_in = False
     st.session_state.user = None
     st.rerun()

@@ -3,6 +3,7 @@ from supabase import create_client, Client
 from tools.login import *
 from tools.dashboard import *
 from tools.current_location import *
+from tools.photo_uploader import *
 
 
 # Supabase のセットアップ
@@ -27,6 +28,7 @@ login_page = st.Page(login, title="ログイン", icon=":material/login:")
 signup_page = st.Page(signup, title="サインアップ", icon=":material/app_registration:")
 dashboard_page = st.Page(dashboard, title="ダッシュボード", icon=":material/dashboard:")
 current_location_page = st.Page(display_location_info, title="位置情報取得", icon=":material/location_on:")
+photo_uploader_page = st.Page(photo_uploader, title="写真アップローダー", icon=":material/photo_camera:")
 
 
 # デバッグ用
@@ -39,7 +41,7 @@ if st.session_state.logged_in:
     pg = st.navigation(
         {
             "ダッシュボード": [dashboard_page],
-            "位置情報取得": [current_location_page],
+            "位置情報取得": [current_location_page, photo_uploader_page],
             "ログアウト": [st.Page(sign_out, title="ログアウト", icon=":material/logout:")],
         }
     )

@@ -11,7 +11,9 @@ SUPABASE_URL = st.secrets["supabase"]["url"]
 SUPABASE_KEY = st.secrets["supabase"]["key"]
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-
+def check_username():
+    if "username" not in st.session_state or not st.session_state.username:
+        st.error("⚠️ ダッシュボードでユーザーネームを作成してください。")
 
 # DBへ保存する関数
 def save_to_db(df):
@@ -52,7 +54,7 @@ def get_and_save_current_position():
                 "comment": [""]
             })
 
-            # FutureWarning の修正
+            
             if not new_entry.dropna(how="all").empty:
                 st.session_state.location_data = pd.concat([st.session_state.location_data, new_entry], ignore_index=True)
 
@@ -89,5 +91,6 @@ def display_and_edit_location_data():
 def display_location_info():
     st.write(f"ようこそ、{st.session_state.user.email}さん！")
     
+    check_username()
     get_and_save_current_position()
     display_and_edit_location_data()
