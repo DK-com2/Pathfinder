@@ -74,7 +74,7 @@ def get_username_by_user_id():
 
 # DB からデータを取得してマップに表示 
 def map():    
-    response = supabase.table("locations").select("*").execute()
+    response = supabase.table("locations").select("*").eq("username", st.session_state.username).execute()
     
     if response.data:
         df = pd.DataFrame(response.data)

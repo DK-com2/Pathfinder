@@ -4,6 +4,7 @@ from tools.login import *
 from tools.dashboard import *
 from tools.current_location import *
 from tools.photo_uploader import *
+from tools.google_timeline import *
 
 
 # Supabase のセットアップ
@@ -29,6 +30,7 @@ signup_page = st.Page(signup, title="サインアップ", icon=":material/app_re
 dashboard_page = st.Page(dashboard, title="ダッシュボード", icon=":material/dashboard:")
 current_location_page = st.Page(display_location_info, title="位置情報取得", icon=":material/location_on:")
 photo_uploader_page = st.Page(photo_uploader, title="写真アップローダー", icon=":material/photo_camera:")
+google_map_timeline = st.Page(google_timeline, title="Google Map タイムライン", icon=":material/map:")
 
 
 # デバッグ用
@@ -42,6 +44,7 @@ if st.session_state.logged_in:
         {
             "ダッシュボード": [dashboard_page],
             "位置情報取得": [current_location_page, photo_uploader_page],
+            "Google Map タイムライン": [google_map_timeline],
             "ログアウト": [st.Page(sign_out, title="ログアウト", icon=":material/logout:")],
         }
     )
