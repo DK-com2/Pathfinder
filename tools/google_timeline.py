@@ -70,7 +70,7 @@ def google_timeline():
     """)
     
 
-    png_path = "items\googel_timeline-1.png"
+    png_path = "items/googel_timeline-1.png"
     st.image(png_path, caption="Googleマップのタイムラインエクスポート方法", use_container_width=True)
 
     # JSONアップロード
