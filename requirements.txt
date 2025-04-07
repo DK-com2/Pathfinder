@@ -5,3 +5,6 @@ folium
 streamlit-folium
 pandas
 bcrypt
+psycopg2
+sqlalchemy psycopg2
+seaborn
